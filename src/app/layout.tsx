@@ -18,11 +18,13 @@ import CssBaseline from "@mui/material/CssBaseline";
 // nextjs optimization
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 
-
 // vercel site performance and analytics
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import { GoogleTagManager } from "@next/third-parties/google";
+
+import { auth } from "@/auth";
+import LogoutBtn from "@/ui/components/LogoutBtn";
 
 export const metadata: Metadata = {
   title: "Anthony Dombrowski's Portfolio",
@@ -30,7 +32,13 @@ export const metadata: Metadata = {
     "Professional Resume Portfolio and Content Library for Anthony Dombrowski. Product Manager and Developer Advocate. ",
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const session = await auth();
+
   return (
     <html lang="en">
       <head>
@@ -41,6 +49,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
+            {session && <LogoutBtn />}
             {children}
             <SpeedInsights />
             <Analytics />
